@@ -39,7 +39,6 @@ public class MainActivity extends Activity implements OnScrollListener,
     private SimpleAdapter simp_adapter;
     private List<Map<String, Object>> dataList;
     private Button addNote;
-    private TextView tv_content;
     private NotesDB DB;
     private SQLiteDatabase dbread;
 
@@ -72,11 +71,10 @@ public class MainActivity extends Activity implements OnScrollListener,
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         checkPermission();
-        tv_content = (TextView) findViewById(R.id.tv_content);
-        listview = (ListView) findViewById(R.id.listview);
-        dataList = new ArrayList<Map<String, Object>>();
+        listview = findViewById(R.id.listview);
+        dataList = new ArrayList<>();
 
-        addNote = (Button) findViewById(R.id.btn_editnote);
+        addNote = findViewById(R.id.btn_editnote);
         mContext = this;
         addNote.setOnClickListener(new OnClickListener() {
 
@@ -123,9 +121,11 @@ public class MainActivity extends Activity implements OnScrollListener,
         while (cursor.moveToNext()) {
             String name = cursor.getString(cursor.getColumnIndex("content"));
             String date = cursor.getString(cursor.getColumnIndex("date"));
+            String id = cursor.getString(cursor.getColumnIndex("_id"));
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("tv_content", name);
             map.put("tv_date", date);
+            map.put("tv_id", id);
             dataList.add(map);
         }
         cursor.close();
@@ -157,18 +157,19 @@ public class MainActivity extends Activity implements OnScrollListener,
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
         NoteEdit.ENTER_STATE = 1;
-        // Log.d("arg2", arg2 + "");
+         Log.d("arg2", arg2 + "");
         // TextView
         // content=(TextView)listview.getChildAt(arg2).findViewById(R.id.tv_content);
         // String content1=content.toString();
-        String content = listview.getItemAtPosition(arg2) + "";
-        String content1 = content.substring(content.indexOf("=") + 1,
-                content.indexOf(","));
-        Log.d("CONTENT", content1);
+        Map<String,String> itemMap = (Map<String, String>) listview.getItemAtPosition(arg2);
+        Log.d("content", itemMap.get("tv_content"));
+        String id = itemMap.get("tv_id");
+        Log.d("ID", id);
         Cursor c = dbread.query("note", null,
-                "content=" + "'" + content1 + "'", null, null, null, null);
+                "_id=" + "'" + id + "'", null, null, null, null);
         while (c.moveToNext()) {
             String No = c.getString(c.getColumnIndex("_id"));
+            String noteContent = c.getString(c.getColumnIndex("content"));
             Log.d("TEXT", No);
             // Intent intent = new Intent(mContext, NoteEdit.class);
             // intent.putExtra("data", text);
@@ -177,7 +178,7 @@ public class MainActivity extends Activity implements OnScrollListener,
             // startActivityForResult(intent, 3);
             Intent myIntent = new Intent();
             Bundle bundle = new Bundle();
-            bundle.putString("info", content1);
+            bundle.putString("info", noteContent);
             NoteEdit.id = Integer.parseInt(No);
             myIntent.putExtras(bundle);
             myIntent.setClass(MainActivity.this, NoteEdit.class);
@@ -207,13 +208,14 @@ public class MainActivity extends Activity implements OnScrollListener,
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String content = listview.getItemAtPosition(n) + "";
-                String content1 = content.substring(content.indexOf("=") + 1,
-                        content.indexOf(","));
-                Cursor c = dbread.query("note", null, "content=" + "'"
-                        + content1 + "'", null, null, null, null);
+
+                Map<String,String> itemMap = (Map<String, String>) listview.getItemAtPosition(n);
+                Log.d("content", itemMap.get("tv_content"));
+                String id = itemMap.get("tv_id");
+                Log.d("ID", id);
+                Cursor c = dbread.query("note", null,
+                        "_id=" + "'" + id + "'", null, null, null, null);
                 while (c.moveToNext()) {
-                    String id = c.getString(c.getColumnIndex("_id"));
                     String sql_del = "update note set content='' where _id="
                             + id;
                     dbread.execSQL(sql_del);

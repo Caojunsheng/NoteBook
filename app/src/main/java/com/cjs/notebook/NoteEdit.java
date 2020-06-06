@@ -36,13 +36,13 @@ public class NoteEdit extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.edit);
 
-		tv_date = (TextView) findViewById(R.id.tv_date);
+		tv_date = findViewById(R.id.tv_date);
 		Date date = new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String dateString = sdf.format(date);
 		tv_date.setText(dateString);
 
-		et_content = (EditText) findViewById(R.id.et_content);
+		et_content = findViewById(R.id.et_content);
 		// 设置软键盘自动弹出
 		getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -55,7 +55,7 @@ public class NoteEdit extends Activity {
 		Log.d("LAST_CONTENT", last_content);
 		et_content.setText(last_content);
 		// 确认按钮点击事件
-		btn_ok = (Button) findViewById(R.id.btn_ok);
+		btn_ok = findViewById(R.id.btn_ok);
 		btn_ok.setOnClickListener(new OnClickListener() {
 			public void onClick(View arg0) {
 				// 获取内容
@@ -93,7 +93,7 @@ public class NoteEdit extends Activity {
 				finish();
 			}
 		});
-		btn_cancel = (Button) findViewById(R.id.btn_cancel);
+		btn_cancel = findViewById(R.id.btn_cancel);
 		btn_cancel.setOnClickListener(new OnClickListener() {
 			public void onClick(View arg0) {
 				finish();
