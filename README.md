@@ -8,4 +8,4 @@ Android记事本
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Caojunsheng/NoteBook&type=Date)](https://www.star-history.com/#Caojunsheng/NoteBook&Date)
+![Star History Chart](https://api.star-history.com/svg?repos=Caojunsheng/NoteBook&type=Date)
